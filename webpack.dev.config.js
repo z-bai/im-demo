@@ -1,14 +1,49 @@
 const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const openBrowser = require('react-dev-utils/openBrowser');
+const fs = require('fs');
 
 module.exports = {
-  entry: './src/index.js',
+  entry: {
+    'hello-world': './src/hello-world.js',
+    'kiwi': './src/kiwi.js'
+  },
   output: {
-    filename: 'bundle.js',
+    filename: '[name].bundle.js',
     path: path.resolve(__dirname, './dist')
   },
   mode: 'development',
+  devServer: {
+    port: 'auto',
+    hot: true,
+    static: {
+      directory: path.resolve(__dirname, 'public'),
+      serveIndex: true,
+    },
+    client: {
+      overlay: true,
+    },
+    compress: true,
+    https: {
+      key: fs.readFileSync(path.resolve(__dirname, './ssl/localhost.key')),
+      cert: fs.readFileSync(path.resolve(__dirname, './ssl/localhost.crt')),
+      ca: fs.readFileSync(path.resolve(__dirname, './ssl/localhost.pem')),
+    },
+    historyApiFallback: true,
+    devMiddleware: {
+      index: true,
+      writeToDisk: false
+    },
+    onListening(devServer) {
+      if (!devServer) {
+        throw new Error('webpack-dev-server is not defined');
+      }
+
+      const { port } = devServer.server.address();
+      openBrowser(`https://localhost:${port}`);
+    }
+  },
   module: {
     rules: [
       {
@@ -61,8 +96,17 @@ module.exports = {
       ]
     }),
     new HtmlWebpackPlugin({
+      filename: 'hello-world.html',
+      chunks: ['hello-world'],
       title: 'Hello world',
-      template: 'src/index.hbs',
+      template: 'src/index.html',
+      description: 'Some description'
+    }),
+    new HtmlWebpackPlugin({
+      filename: 'kiwi.html',
+      chunks: ['kiwi'],
+      title: 'Hello world',
+      template: 'src/index.html',
       description: 'Some description'
     }),
   ]
