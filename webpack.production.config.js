@@ -14,7 +14,16 @@ module.exports = {
   },
   mode: 'production',
   optimization: {
+    runtimeChunk: 'single',
+    moduleIds: 'deterministic',
     splitChunks: {
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          chunks: 'all',
+        }
+      },
       chunks: 'all',
       minSize: 3000
     }
