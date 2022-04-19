@@ -1,14 +1,10 @@
 const path = require('path');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 const openBrowser = require('react-dev-utils/openBrowser');
 const fs = require('fs');
+const { merge } = require("webpack-merge");
+const baseConfig = require('./webpack.base');
 
-module.exports = {
-  entry: {
-    'hello-world': './src/hello-world.js',
-    'kiwi': './src/kiwi.js'
-  },
+const config = {
   output: {
     filename: '[name].bundle.js',
     path: path.resolve(__dirname, './dist')
@@ -47,19 +43,6 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(png|jpg)$/,
-        type: 'asset',
-        parser: {
-          dataUrlCondition: {
-            maxSize: 3 * 1024 // 3 kilobytes
-          }
-        }
-      },
-      {
-        test: /\.txt$/,
-        type: 'asset/source'
-      },
-      {
         test: /\.css$/,
         use: [
           'style-loader',
@@ -74,40 +57,10 @@ module.exports = {
           'sass-loader'
         ]
       },
-      {
-        test: /\.m?js$/,
-        exclude: /(node_modules|bower_components)/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            cacheDirectory: true,
-            presets: ['@babel/preset-env'],
-            plugins: []
-          }
-        }
-      },
     ]
   },
   plugins: [
-    new CleanWebpackPlugin({
-      cleanOnceBeforeBuildPatterns: [
-        '**/*',
-        path.join(process.cwd(), 'build/**/*')
-      ]
-    }),
-    new HtmlWebpackPlugin({
-      filename: 'hello-world.html',
-      chunks: ['hello-world'],
-      title: 'Hello world',
-      template: 'src/index.html',
-      description: 'Some description'
-    }),
-    new HtmlWebpackPlugin({
-      filename: 'kiwi.html',
-      chunks: ['kiwi'],
-      title: 'Hello world',
-      template: 'src/index.html',
-      description: 'Some description'
-    }),
   ]
 };
+
+module.exports = merge(baseConfig, config);
