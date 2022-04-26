@@ -1,0 +1,11 @@
+.app-container {
+  display: flex;
+  justify-content: center;
+  .name-collector {
+    width: 50%;
+    margin-top: 50px;
+    display: flex;
+    align-items: flex-end;
+    //border: 1px solid red;
+  }
+}
