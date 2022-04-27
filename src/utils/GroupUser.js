@@ -3,11 +3,19 @@ import TIM from "tim-js-sdk";
 
 export default class GroupUser {
   constructor(userId) {
+    if (!userId) {
+      debugger;
+      throw new Error('userId 不能为空');
+    }
     this.userId = userId;
   }
 
+  getUserId() {
+    return this.userId;
+  }
   prepareUser() {
     const uid = this.userId;
+    console.log('preparing for uid', uid);
     return loginUser(uid).then(() => waitSDK(uid));
   }
 
@@ -19,14 +27,29 @@ export default class GroupUser {
   };
 
   createGroup(options) {
+    // debugger;
     return this.prepareUser().then(() => {
-      return tim.createGroup(options)
+      console.log('creating group for options', options);
+      return tim.createGroup({
+        ...options,
+        type: TIM.TYPES.GRP_PUBLIC
+      });
     })
   }
 
   dismissGroup(groupId) {
     return this.prepareUser().then(() => {
       return tim.dismissGroup(groupId);
+    })
+  }
+
+  getGroupMemberList(gid) {
+    return this.prepareUser().then(() => {
+      return tim.getGroupMemberList({
+        groupID: gid,
+        count: 30,
+        offset: 0
+      })
     })
   }
 }

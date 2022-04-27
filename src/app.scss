@@ -1,9 +1,9 @@
 .app-container {
   display: flex;
   justify-content: center;
+  padding-top: 100px;
   .name-collector {
     width: 50%;
-    margin-top: 50px;
     display: flex;
     align-items: flex-end;
     //border: 1px solid red;

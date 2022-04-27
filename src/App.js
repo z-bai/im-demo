@@ -4,40 +4,33 @@ import './utils/timUtils';
 import GroupUser from "./utils/GroupUser";
 import TIM from "tim-js-sdk";
 import { TextField } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import './app.scss';
+import CollectUsername from "./components/CollectUsername/CollectUsername";
+import MainContent from "./components/MainContent/MainContent";
 
-// const user = new GroupUser('123');
-//
-// const groupParams = {
-//   name: '自建群组',
-//   type: TIM.TYPES.GRP_PUBLIC,
-//   introduction: '这是第一个创建的群',
-//   memberList: [{
-//     userID: '123'
-//   }]
-// };
-//
-// user.getGroupList().then(res => {
-//   console.log('group result', res);
-// })
-//
-// user.dismissGroup('@TGS#2XFSRRFIF');
+export const UserContext = React.createContext(null);
 
 function App() {
-  const [username, setUsername] = useState('');
+  const [username, setUsername] = useState('xiaowang');
+  const userRef = useRef(username && new GroupUser(username));
+
   return (
     <div className="app-container">
-      <div className="name-collector">
-        <TextField variant="standard" value={username}
-                   label="在此输入您在群聊中的昵称"
-                   fullWidth
-                   onChange={t => setUsername(t.target.value)}
-        />
-        <Button variant="contained">继续</Button>
-      </div>
+      {
+        !username ? (
+          <CollectUsername setUsername={(v) => {
+            userRef.current = new GroupUser(v);
+            setUsername(v);
+          }} />
+        ) : (
+          <UserContext.Provider value={userRef.current}>
+            <MainContent />
+          </UserContext.Provider>
+        )
+      }
     </div>
-  )
+  );
 }
 
 export default App;

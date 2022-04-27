@@ -13,9 +13,12 @@ tim.registerPlugin({'cos-js-sdk': COS});
 let loginP;
 export const loginUser = (userId) => {
   if (!loginP) {
-    loginP = tim.login({
+    console.log('login userId', userId);
+    const userSig = genTestUserSig(userId).userSig;
+    console.log('login userSig', userSig);
+    return loginP = tim.login({
       userID: userId,
-      userSig: genTestUserSig(userId).userSig
+      userSig
     }).catch((e) => {
       loginP = null;
       throw e;
@@ -27,7 +30,10 @@ export const loginUser = (userId) => {
 
 let sdkP;
 export function waitSDK(uid) {
-  if (!sdkP || !loginP) {
+  if (!loginP) {
+    throw new Error('需要先登录');
+  }
+  if (!sdkP) {
     sdkP = new Promise((resolve) => {
       const onReady = (event) => {
         console.log('sdk ready for uid', uid);

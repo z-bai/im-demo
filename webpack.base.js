@@ -15,7 +15,7 @@ module.exports = {
         type: 'asset/source'
       },
       {
-        test: /\.(png|jpg)$/,
+        test: /\.(png|jpg|jpeg)$/,
         type: 'asset',
         parser: {
           dataUrlCondition: {
