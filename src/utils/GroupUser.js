@@ -54,27 +54,40 @@ export default class GroupUser {
   }
 
   sendMessageToGroup({ gid, text }) {
-    const message = tim.createTextMessage({
-      to: gid,
-      conversationType: TIM.TYPES.CONV_GROUP,
-      payload: {
-        text: text
-      }
-    });
+    return this.prepareUser().then(() => {
+      const message = tim.createTextMessage({
+        to: gid,
+        conversationType: TIM.TYPES.CONV_GROUP,
+        payload: {
+          text: text
+        }
+      });
 
-    return tim.sendMessage(message).then(res => {
-      console.log('发送消息成功', res);
-    });
+      return tim.sendMessage(message).then(res => {
+        console.log('发送消息成功', res);
+      });
+    })
   }
 
   getMessageList({targetId, nextReqMessageID}) {
-    return tim.getMessageList({
-      conversationID: `GROUP${targetId}`,
-      nextReqMessageID,
-      count: 15
-    }).then(res => {
-      console.log('群聊消息列表', res);
-      return res.data;
+    return this.prepareUser().then(() => {
+      return tim.getMessageList({
+        conversationID: `GROUP${targetId}`,
+        nextReqMessageID,
+        count: 15
+      }).then(res => {
+        console.log('群聊消息列表', res);
+        return res.data;
+      })
     })
+  }
+
+  detectMessageEvent() {
+    return this.prepareUser().then(() => {
+      const onMessageReceived = (e) => {
+        console.log('message received', e);
+      };
+      tim.on(TIM.EVENT.MESSAGE_RECEIVED, onMessageReceived);
+    });
   }
 }

@@ -37,6 +37,7 @@ export default function MainContent(props) {
 
   useEffect(() => {
     getGroupList();
+    user.detectMessageEvent();
   }, []);
 
   useEffect(() => {
