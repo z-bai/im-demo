@@ -52,4 +52,29 @@ export default class GroupUser {
       }).then(res => res.data.memberList);
     })
   }
+
+  sendMessageToGroup({ gid, text }) {
+    const message = tim.createTextMessage({
+      to: gid,
+      conversationType: TIM.TYPES.CONV_GROUP,
+      payload: {
+        text: text
+      }
+    });
+
+    return tim.sendMessage(message).then(res => {
+      console.log('发送消息成功', res);
+    });
+  }
+
+  getMessageList({targetId, nextReqMessageID}) {
+    return tim.getMessageList({
+      conversationID: `GROUP${targetId}`,
+      nextReqMessageID,
+      count: 15
+    }).then(res => {
+      console.log('群聊消息列表', res);
+      return res.data;
+    })
+  }
 }

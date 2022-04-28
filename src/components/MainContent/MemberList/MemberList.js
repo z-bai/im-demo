@@ -9,7 +9,6 @@ export default function MemberList(props) {
   const currentUser = useContext(UserContext);
 
   useEffect(() => {
-    console.log('groupId', groupId);
     currentUser.getGroupMemberList(groupId).then(res => {
       // console.log('members', res);
       setMembers(res);

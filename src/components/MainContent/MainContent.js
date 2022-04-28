@@ -23,6 +23,7 @@ export default function MainContent(props) {
   const [activeGroupIndex, setActiveGroupIndex] = useState(0);
   const [anchorEl, setAnchorEl] = useState(null);
   const menuOpen = Boolean(anchorEl);
+  const [text, setText] = useState('');
 
   const user = useContext(UserContext);
 
@@ -37,6 +38,15 @@ export default function MainContent(props) {
   useEffect(() => {
     getGroupList();
   }, []);
+
+  useEffect(() => {
+    const activeGroup = groupList[activeGroupIndex];
+
+    if (!activeGroup) return;
+    user.getMessageList({
+      targetId: activeGroup.groupID
+    })
+  }, [groupList, activeGroupIndex]);
 
   const handleGroupCreated = (res) => {
     console.log('group created', res);
@@ -125,6 +135,19 @@ export default function MainContent(props) {
             multiline
             rows={4}
             variant="filled"
+            value={text}
+            onChange={e => setText(e.target.value)}
+            onKeyDown={(e) => {
+              const keyCode = e.keyCode;
+              if (keyCode === 13) {
+                // console.log('enter pressed');
+                console.log('text', text);
+                user.sendMessageToGroup({
+                  gid: groupList[activeGroupIndex].groupID,
+                  text
+                });
+              }
+            }}
           />
         </div>
       </div>
@@ -132,5 +155,5 @@ export default function MainContent(props) {
         <MemberList groupId={groupList[activeGroupIndex].groupID} />
       </div>
     </div>
-  )
+  );
 }
