@@ -12,7 +12,7 @@ import MainContent from "./components/MainContent/MainContent";
 export const UserContext = React.createContext(null);
 
 function App() {
-  const [username, setUsername] = useState('xiaowang');
+  const [username, setUsername] = useState('administrator');
   const userRef = useRef(username && new GroupUser(username));
 
   return (

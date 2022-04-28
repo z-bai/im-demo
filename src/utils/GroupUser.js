@@ -49,7 +49,7 @@ export default class GroupUser {
         groupID: gid,
         count: 30,
         offset: 0
-      })
+      }).then(res => res.data.memberList);
     })
   }
 }
