@@ -12,6 +12,7 @@ import MainContent from "./components/MainContent/MainContent";
 export const UserContext = React.createContext(null);
 
 function App() {
+  // const [username, setUsername] = useState('administrator');
   const [username, setUsername] = useState('');
   const userRef = useRef(username && new GroupUser(username));
 

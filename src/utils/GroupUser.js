@@ -65,6 +65,7 @@ export default class GroupUser {
 
       return tim.sendMessage(message).then(res => {
         console.log('发送消息成功', res);
+        return res.data.message;
       });
     })
   }
@@ -82,10 +83,13 @@ export default class GroupUser {
     })
   }
 
+  onMessageReceived(callback) {
+    tim.on(TIM.EVENT.MESSAGE_RECEIVED, callback);
+  };
+
   detectMessageEvent() {
     return this.prepareUser().then(() => {
       const onMessageReceived = (e) => {
-        console.log('message received', e);
       };
       tim.on(TIM.EVENT.MESSAGE_RECEIVED, onMessageReceived);
     });

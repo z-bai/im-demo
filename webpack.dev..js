@@ -21,11 +21,11 @@ const config = {
       overlay: true,
     },
     compress: true,
-    https: {
-      key: fs.readFileSync(path.resolve(__dirname, './ssl/localhost.key')),
-      cert: fs.readFileSync(path.resolve(__dirname, './ssl/localhost.crt')),
-      ca: fs.readFileSync(path.resolve(__dirname, './ssl/localhost.pem')),
-    },
+    // https: {
+    //   key: fs.readFileSync(path.resolve(__dirname, './ssl/localhost.key')),
+    //   cert: fs.readFileSync(path.resolve(__dirname, './ssl/localhost.crt')),
+    //   ca: fs.readFileSync(path.resolve(__dirname, './ssl/localhost.pem')),
+    // },
     historyApiFallback: true,
     devMiddleware: {
       index: true,

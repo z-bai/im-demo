@@ -16,6 +16,7 @@ import {
 import MemberList from "./MemberList/MemberList";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { UserContext } from "../../App";
+import MessageList from "./MessageList/MessageList";
 
 export default function MainContent(props) {
   const [groupList, setGroupList] = useState([]);
@@ -24,6 +25,7 @@ export default function MainContent(props) {
   const [anchorEl, setAnchorEl] = useState(null);
   const menuOpen = Boolean(anchorEl);
   const [text, setText] = useState('');
+  const [messages, setMessages] = useState([]);
 
   const user = useContext(UserContext);
 
@@ -37,17 +39,24 @@ export default function MainContent(props) {
 
   useEffect(() => {
     getGroupList();
-    user.detectMessageEvent();
+    // user.detectMessageEvent();
+    user.onMessageReceived((e) => {
+      const messages = e.data;
+      setMessages(prev => prev.concat(messages));
+      // console.log('message received', e);
+    })
   }, []);
 
+  const groupId = groupList?.[activeGroupIndex]?.groupID;
   useEffect(() => {
-    const activeGroup = groupList[activeGroupIndex];
-
-    if (!activeGroup) return;
+    if (!groupId) return;
     user.getMessageList({
-      targetId: activeGroup.groupID
+      targetId: groupId
+    }).then(res => {
+      const { isCompleted, messageList, nextReqMessageID } = res;
+      setMessages(messageList);
     })
-  }, [groupList, activeGroupIndex]);
+  }, [groupId]);
 
   const handleGroupCreated = (res) => {
     console.log('group created', res);
@@ -67,6 +76,8 @@ export default function MainContent(props) {
       getGroupList();
     });
   }
+
+
   if (!groupList.length) {
     return (
       <div>
@@ -127,7 +138,7 @@ export default function MainContent(props) {
       </div>
       <div className="chat-window">
         <div className="messages">
-
+          <MessageList messages={messages} />
         </div>
         <div className="text-box">
           <TextField
@@ -146,6 +157,12 @@ export default function MainContent(props) {
                 user.sendMessageToGroup({
                   gid: groupList[activeGroupIndex].groupID,
                   text
+                }).then(res => {
+                  console.log('刚发送的消息', res);
+                  if (res) {
+                    setMessages(prevM => prevM.concat(res));
+                    setText('');
+                  }
                 });
               }
             }}
