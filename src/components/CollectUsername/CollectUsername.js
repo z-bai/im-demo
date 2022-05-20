@@ -1,6 +1,7 @@
 import { TextField } from "@mui/material";
 import Button from "@mui/material/Button";
 import React, { useState } from 'react';
+import './CollectUsername.scss';
 
 export default function CollectUsername(props) {
   const [name, setName] = useState('');
@@ -14,12 +15,13 @@ export default function CollectUsername(props) {
                  onChange={t => setName(t.target.value)}
       />
       <Button variant="contained"
+              className="button"
               onClick={() => {
                 if (name.trim().length) {
                   setUsername(name);
                 }
               }}
-      >继续</Button>
+      >进入聊天室</Button>
     </div>
   )
 }
